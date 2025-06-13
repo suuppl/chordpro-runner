@@ -21,7 +21,7 @@ jobs:
         run: |
           for file in songs/*.cho; do
             base=$(basename "$file" .cho)
-            chordpro "$file" -o "output/$base.pdf"
+            chordpro "$file" --config=config/chordpro-config.json -o "output/$base.pdf"
           done
 
       - name: List output files
