@@ -1,0 +1,35 @@
+name: Compile ChordPro Files
+
+on:
+  push:
+    paths:
+      - 'songs/**/*.cho'
+  workflow_dispatch:
+
+jobs:
+  compile-chordpro:
+    runs-on: chordpro-runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create output directory
+        run: mkdir -p output
+
+      - name: Compile .cho files using chordpro in Docker
+        run: |
+          for file in songs/*.cho; do
+            base=$(basename "$file" .cho)
+            chordpro "$file" -o "output/$base.pdf"
+          done
+
+      - name: List output files
+        run: ls -lh output
+      
+      - name: Upload output (PDFs)
+        uses: actions/upload-artifact@v3
+        # @v4 isn't supported on GHES... https://stackoverflow.com/questions/79267706/error-actions-artifact-v2-0-0-upload-artifactv4-and-download-artifactv4
+        with:
+          name: chordpro-pdfs
+          path: output/
