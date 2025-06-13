@@ -1,0 +1,8 @@
+services:
+  app:
+    image: suuppl/chordpro-runner
+    volumes:
+      - ./songs:/songs
+      - ./output:/output
+    command:
+      "tail -f /dev/null"
